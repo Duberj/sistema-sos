@@ -1,14 +1,20 @@
 FROM php:8.1-apache
 
-# Habilitar extensiones necesarias
+# Extensiones PHP
 RUN docker-php-ext-install mysqli pdo pdo_mysql
-
-# Habilitar mod_rewrite si usas URLs amigables
 RUN a2enmod rewrite
 
-# Copiar app al servidor
-COPY . /var/www/html/
+# Puerto dinámico para Railway
+ENV PORT=8080
+EXPOSE 8080
 
-# Permisos
+# Configurar Apache para escuchar en el puerto correcto
+COPY apache-port.conf /etc/apache2/sites-enabled/000-default.conf
+
+# Copiar app
+COPY . /var/www/html/
 RUN chown -R www-data:www-data /var/www/html
+
+CMD ["apache2-foreground"]
+
 
