@@ -1,13 +1,14 @@
 FROM php:8.1-apache
 
-# Habilitar mysqli
+# Habilitar extensiones necesarias
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Copiar los archivos del proyecto al servidor Apache
+# Habilitar mod_rewrite si usas URLs amigables
+RUN a2enmod rewrite
+
+# Copiar app al servidor
 COPY . /var/www/html/
 
-# Dar permisos
+# Permisos
 RUN chown -R www-data:www-data /var/www/html
 
-# Exponer el puerto
-EXPOSE 80
