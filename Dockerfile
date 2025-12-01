@@ -8,13 +8,16 @@ RUN a2enmod rewrite
 ENV PORT=8080
 EXPOSE 8080
 
-# Configurar Apache para escuchar en el puerto correcto
-COPY apache-port.conf /etc/apache2/sites-enabled/000-default.conf
-
 # Copiar app
 COPY . /var/www/html/
 RUN chown -R www-data:www-data /var/www/html
 
-CMD ["apache2-foreground"]
+# Copiar script para configurar Apache dinámicamente
+COPY apache-port.sh /usr/local/bin/apache-port.sh
+RUN chmod +x /usr/local/bin/apache-port.sh
+
+# Iniciar Apache usando el script
+CMD ["/usr/local/bin/apache-port.sh"]
+
 
 
