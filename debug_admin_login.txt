@@ -1,0 +1,9 @@
+=== NUEVO INTENTO 2025-11-17 18:50:17 ===
+=== NUEVO INTENTO 2025-11-17 18:50:27 ===
+Usuario recibido: admin
+Contraseña recibida: admin123
+Usuario encontrado en BD: admin
+Hash almacenado: $2y$10$X9v3X9v3X9v3X9v3X9v3X9v3X9v3X9v3X9v3X9v3X9v3X9v3X9v3
+Password verifica: NO
+❌ LOGIN FALLIDO
+

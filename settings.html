@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración - SOS-UNI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #1e3a8a;
+            --color-secondary: #3b82f6;
+            --color-danger: #dc2626;
+            --color-success: #059669;
+            --color-warning: #f59e0b;
+            --color-neutral: #6b7280;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        .setting-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .setting-card:hover {
+            border-color: var(--color-secondary);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background: var(--color-primary);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(26px);
+        }
+        
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        
+        .nav-item {
+            transition: all 0.3s ease;
+            color: var(--color-neutral);
+        }
+        
+        .nav-item.active {
+            color: var(--color-primary);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .danger-button {
+            background: var(--color-danger);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .danger-button:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+        
+        .success-message {
+            background: var(--color-success);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        
+        .success-message.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 pb-20">
+    <!-- Header -->
+    <div class="bg-white shadow-sm px-4 py-4">
+        <div class="flex items-center justify-between">
+            <h1 class="text-xl font-bold text-gray-900">Configuración</h1>
+            <button onclick="goHome()" class="text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message mx-4 mt-4">
+        ✅ Configuración actualizada correctamente
+    </div>
+    
+    <!-- Privacy Settings -->
+    <div class="px-4 py-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Privacidad y Seguridad</h2>
+        
+        <div class="setting-card">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Anonimato Total</div>
+                    <div class="text-sm text-gray-600">No recopilar ningún dato de identificación</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
+            </div>
+        </div>
+        
+        <div class="setting-card">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Eliminar Metadatos</div>
+                    <div class="text-sm text-gray-600">Quitar información de ubicación de archivos</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
+            </div>
+        </div>
+        
+        <div class="setting-card">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Modo Incógnito</div>
+                    <div class="text-sm text-gray-600">No guardar historial en el dispositivo</div>
+                </div>
+                <div class="toggle-switch" onclick="toggleSetting(this)"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification Settings -->
+    <div class="px-4">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Notificaciones</h2>
+        
+        <div class="setting-card">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Alertas de Seguridad</div>
+                    <div class="text-sm text-gray-600">Notificaciones importantes del campus</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
+            </div>
+        </div>
+        
+        <div class="setting-card">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Actualizaciones del Sistema</div>
+                    <div class="text-sm text-gray-600">Información sobre mejoras y cambios</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
+            </div>
+        </div>
+        
+        <div class="setting-card">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Recordatorios de Seguridad</div>
+                    <div class="text-sm text-gray-600">Consejos y mejores prácticas</div>
+                </div>
+                <div class="toggle-switch" onclick="toggleSetting(this)"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- App Preferences -->
+    <div class="px-4 mt-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Preferencias de la App</h2>
+        
+        <div class="setting-card" onclick="changeLanguage()">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Idioma</div>
+                    <div class="text-sm text-gray-600">Español (España)</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+        
+        <div class="setting-card" onclick="changeTheme()">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Tema</div>
+                    <div class="text-sm text-gray-600">Claro (predeterminado)</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+        
+        <div class="setting-card">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Modo Offline</div>
+                    <div class="text-sm text-gray-600">Funcionalidad básica sin conexión</div>
+                </div>
+                <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Data Management -->
+    <div class="px-4 mt-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Gestión de Datos</h2>
+        
+        <div class="setting-card" onclick="showPrivacyPolicy()">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Política de Privacidad</div>
+                    <div class="text-sm text-gray-600">Cómo protegemos tu información</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+        
+        <div class="setting-card" onclick="showTerms()">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Términos y Condiciones</div>
+                    <div class="text-sm text-gray-600">Condiciones de uso del servicio</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+        
+        <div class="setting-card" onclick="exportData()">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Exportar Datos</div>
+                    <div class="text-sm text-gray-600">Descargar información de la app</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+        
+        <div class="setting-card" onclick="confirmDeleteData()">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-red-600">Eliminar Todos los Datos</div>
+                    <div class="text-sm text-gray-600">Borrar toda la información almacenada</div>
+                </div>
+                <div class="text-red-400">›</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- App Information -->
+    <div class="px-4 mt-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Información</h2>
+        
+        <div class="setting-card">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Versión de la App</div>
+                    <div class="text-sm text-gray-600">SOS-UNI v2.1.0</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+        
+        <div class="setting-card" onclick="checkUpdates()">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Buscar Actualizaciones</div>
+                    <div class="text-sm text-gray-600">Verificar nuevas versiones</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+        
+        <div class="setting-card" onclick="showAbout()">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="font-semibold text-gray-900">Acerca de SOS-UNI</div>
+                    <div class="text-sm text-gray-600">Información del proyecto</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav fixed bottom-0 left-0 right-0 px-4 py-2">
+        <div class="flex justify-around items-center">
+            <div class="nav-item flex flex-col items-center py-2" onclick="goHome()">
+                <span class="text-2xl mb-1">🏠</span>
+                <span class="text-xs">Inicio</span>
+            </div>
+            <div class="nav-item flex flex-col items-center py-2" onclick="showResources()">
+                <span class="text-2xl mb-1">📞</span>
+                <span class="text-xs">Recursos</span>
+            </div>
+            <div class="nav-item active flex flex-col items-center py-2" onclick="showSettings()">
+                <span class="text-2xl mb-1">⚙️</span>
+                <span class="text-xs">Configuración</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Privacy Policy Modal -->
+    <div id="privacyModal" class="modal">
+        <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-900">Política de Privacidad</h3>
+                    <button onclick="closeModal('privacyModal')" class="text-gray-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="space-y-4 text-sm text-gray-700">
+                    <p><strong>Última actualización:</strong> 12 de octubre de 2024</p>
+                    
+                    <p>En SOS-UNI, tu privacidad y seguridad son nuestra máxima prioridad. Esta política describe cómo protegemos tu información.</p>
+                    
+                    <h4 class="font-semibold text-gray-900">Principios Fundamentales:</h4>
+                    <ul class="space-y-2">
+                        <li>• <strong>Anonimato por diseño:</strong> No requerimos identificación</li>
+                        <li>• <strong>Mínima recopilación:</strong> Solo datos estrictamente necesarios</li>
+                        <li>• <strong>Encriptación:</strong> Toda la información está cifrada</li>
+                        <li>• <strong>Automatización:</strong> Procesos automatizados sin intervención humana</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold text-gray-900">Qué NO hacemos:</h4>
+                    <ul class="space-y-2">
+                        <li>• No recopilamos nombres, emails ni datos personales</li>
+                        <li>• No rastreamos ubicación exacta</li>
+                        <li>• No almacenamos IPs ni identificadores</li>
+                        <li>• No vendemos ni compartimos información</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold text-gray-900">Seguridad de Datos:</h4>
+                    <ul class="space-y-2">
+                        <li>• Cifrado de extremo a extremo</li>
+                        <li>• Eliminación automática de metadatos</li>
+                        <li>• Almacenamiento seguro en servidores certificados</li>
+                        <li>• Auditorías regulares de seguridad</li>
+                    </ul>
+                    
+                    <p>Si tienes preguntas sobre tu privacidad, contacta a: privacy@sos-uni.edu</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Terms Modal -->
+    <div id="termsModal" class="modal">
+        <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-900">Términos y Condiciones</h3>
+                    <button onclick="closeModal('termsModal')" class="text-gray-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="space-y-4 text-sm text-gray-700">
+                    <p><strong>Última actualización:</strong> 12 de octubre de 2024</p>
+                    
+                    <p>Al usar SOS-UNI, aceptas los siguientes términos y condiciones:</p>
+                    
+                    <h4 class="font-semibold text-gray-900">Uso del Servicio:</h4>
+                    <ul class="space-y-2">
+                        <li>• SOS-UNI es un servicio complementario, no reemplaza servicios de emergencia</li>
+                        <li>• El servicio es gratuito para todos los estudiantes</li>
+                        <li>• El uso es voluntario y anónimo</li>
+                        <li>• No se garantiza tiempo de respuesta específico</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold text-gray-900">Responsabilidades del Usuario:</h4>
+                    <ul class="space-y-2">
+                        <li>• Usar el servicio de buena fe</li>
+                        <li>• No hacer reportes falsos o maliciosos</li>
+                        <li>• Respetar el anonimato de otros</li>
+                        <li>• Seguir las instrucciones del equipo de respuesta</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold text-gray-900">Limitaciones:</h4>
+                    <ul class="space-y-2">
+                        <li>• No somos un servicio de emergencia inmediata</li>
+                        <li>• No proporcionamos asesoría legal directa</li>
+                        <li>• No sustituimos servicios profesionales especializados</li>
+                        <li>• La efectividad depende de la información proporcionada</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold text-gray-900">Modificaciones:</h4>
+                    <p>La universidad se reserva el derecho de modificar estos términos en cualquier momento. Se notificará a los usuarios sobre cambios importantes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Data Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="bg-white rounded-2xl w-full max-w-md">
+            <div class="p-6 text-center">
+                <div class="text-6xl mb-4">⚠️</div>
+                <h3 class="text-xl font-bold mb-2 text-gray-900">¿Eliminar todos los datos?</h3>
+                <p class="text-gray-600 mb-6">Esta acción no se puede deshacer. Se eliminará toda la información almacenada en la aplicación.</p>
+                
+                <div class="space-y-3">
+                    <button onclick="deleteAllData()" class="danger-button w-full">
+                        Sí, eliminar todo
+                    </button>
+                    <button onclick="closeModal('deleteModal')" class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            animateCards();
+        });
+        
+        function animateCards() {
+            anime({
+                targets: '.setting-card',
+                translateX: [-50, 0],
+                opacity: [0, 1],
+                duration: 400,
+                delay: anime.stagger(50),
+                easing: 'easeOutCubic'
+            });
+        }
+        
+        function toggleSetting(element) {
+            element.classList.toggle('active');
+            showSuccessMessage();
+            
+            // Add animation
+            anime({
+                targets: element,
+                scale: [1, 1.1, 1],
+                duration: 200,
+                easing: 'easeOutCubic'
+            });
+        }
+        
+        function showSuccessMessage() {
+            const message = document.getElementById('successMessage');
+            message.classList.add('active');
+            
+            setTimeout(() => {
+                message.classList.remove('active');
+            }, 3000);
+        }
+        
+        function changeLanguage() {
+            alert('Función de cambio de idioma próximamente disponible.');
+        }
+        
+        function changeTheme() {
+            alert('Función de cambio de tema próximamente disponible.');
+        }
+        
+        function showPrivacyPolicy() {
+            document.getElementById('privacyModal').classList.add('active');
+        }
+        
+        function showTerms() {
+            document.getElementById('termsModal').classList.add('active');
+        }
+        
+        function exportData() {
+            alert('Generando archivo de exportación... Tu información será descargada en formato JSON cifrado.');
+        }
+        
+        function confirmDeleteData() {
+            document.getElementById('deleteModal').classList.add('active');
+        }
+        
+        function deleteAllData() {
+            closeModal('deleteModal');
+            
+            // Show loading animation
+            anime({
+                targets: 'body',
+                opacity: [1, 0.5, 1],
+                duration: 1000,
+                complete: function() {
+                    alert('✅ Todos los datos han sido eliminados correctamente.');
+                }
+            });
+        }
+        
+        function checkUpdates() {
+            alert('🔍 Buscando actualizaciones... Tu aplicación está actualizada (v1.0).');
+        }
+        
+        function showAbout() {
+            alert('SOS-UNI v1.0\n\nUna aplicación desarrollada para la comunidad universitaria con el objetivo de crear un entorno más seguro y acogedor.\n\n© 2025 Universidad - Todos los derechos reservados.');
+        }
+        
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+        }
+        
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+        
+        function showResources() {
+            window.location.href = 'resources.html';
+        }
+        
+        function showSettings() {
+            // Already on settings page
+            window.location.reload();
+        }
+        
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                const modals = ['privacyModal', 'termsModal', 'deleteModal'];
+                modals.forEach(modalId => {
+                    const modal = document.getElementById(modalId);
+                    if (modal.classList.contains('active')) {
+                        closeModal(modalId);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

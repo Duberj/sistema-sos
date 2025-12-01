@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Dashboard - SOS-UNI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"> 
+    <style>
+     
+      
+    </style>
+</head>
+<body class="bg-gray-50 pb-20">
+    <!-- Header -->
+    <div class="bg-white shadow-sm px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <button onclick="goBack()" class="text-gray-600 mr-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <h1 class="text-xl font-bold text-gray-900">Mi Dashboard</h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="text-sm text-gray-600" id="usernameDisplay">Usuario</span>
+                <button onclick="logout()" class="text-red-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Welcome Section -->
+    <div class="px-4 py-6">
+        <div class="dashboard-card text-center">
+            <div class="text-4xl mb-4">👋</div>
+            <h2 class="text-xl font-bold text-gray-900 mb-2">¡Bienvenido/a a tu espacio seguro!</h2>
+            <p class="text-gray-600">Aquí puedes hacer seguimiento de tus reportes y comunicarte con el equipo de SOS-UNI</p>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="px-4">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Acciones Rápidas</h3>
+        
+        <div class="flex flex-wrap">
+            <button class="quick-action-btn" onclick="newReport()">
+                🚨 Nueva Denuncia
+            </button>
+            <button class="quick-action-btn" onclick="viewAllReports()">
+                📋 Ver Todas
+            </button>
+            <button class="quick-action-btn" onclick="contactSupport()">
+                💬 Contactar Soporte
+            </button>
+            <button class="quick-action-btn" onclick="viewStatistics()">
+                📊 Mis Estadísticas
+            </button>
+        </div>
+    </div>
+    
+    <!-- Recent Reports -->
+    <div class="px-4 mt-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Mis Reportes Recientes</h3>
+        
+        <div id="reportsList">
+            <!-- Report 1 -->
+            <div class="report-card" onclick="openReportDetail('SOS-2024-001247')">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">🚫</span>
+                        <div>
+                            <div class="font-semibold text-gray-900">Acoso Sexual</div>
+                            <div class="text-sm text-gray-600">ID: SOS-2024-001247</div>
+                        </div>
+                    </div>
+                    <div class="status-badge status-in-progress">En Proceso</div>
+                </div>
+                <p class="text-sm text-gray-700 mb-3">Incidente reportado en biblioteca central. Se menciona acoso recurrente por parte de un estudiante...</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-gray-500">Hace 2 horas</span>
+                    <span class="text-xs text-blue-600 font-medium">1 mensaje nuevo</span>
+                </div>
+            </div>
+            
+            <!-- Report 2 -->
+            <div class="report-card" onclick="openReportDetail('SOS-2024-001245')">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">💊</span>
+                        <div>
+                            <div class="font-semibold text-gray-900">Consumo de Drogas</div>
+                            <div class="text-sm text-gray-600">ID: SOS-2024-001245</div>
+                        </div>
+                    </div>
+                    <div class="status-badge status-resolved">Resuelto</div>
+                </div>
+                <p class="text-sm text-gray-700 mb-3">Reporte de consumo de sustancias en baños del segundo piso. Se solicita intervención...</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-gray-500">Hace 6 horas</span>
+                    <span class="text-xs text-green-600 font-medium">✅ Caso cerrado</span>
+                </div>
+            </div>
+            
+            <!-- Report 3 -->
+            <div class="report-card" onclick="openReportDetail('SOS-2024-001244')">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">🤝</span>
+                        <div>
+                            <div class="font-semibold text-gray-900">Discriminación</div>
+                            <div class="text-sm text-gray-600">ID: SOS-2024-001244</div>
+                        </div>
+                    </div>
+                    <div class="status-badge status-pending">Pendiente</div>
+                </div>
+                <p class="text-sm text-gray-700 mb-3">Comentarios discriminatorios en clase. Afecta a estudiantes de diversos orígenes...</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-gray-500">Hace 8 horas</span>
+                    <span class="text-xs text-orange-600 font-medium">⏳ En espera</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- News Section -->
+    <div class="px-4 mt-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Noticias y Actualizaciones</h3>
+        
+        <div class="dashboard-card">
+            <div class="flex items-start mb-3">
+                <span class="text-2xl mr-3">📢</span>
+                <div>
+                    <div class="font-semibold text-gray-900">Nueva Campaña de Seguridad</div>
+                    <div class="text-sm text-gray-600 mb-2">La universidad ha lanzado una nueva campaña de prevención de acoso</div>
+                    <span class="text-xs text-blue-600">Hace 1 día</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="flex items-start mb-3">
+                <span class="text-2xl mr-3">📊</span>
+                <div>
+                    <div class="font-semibold text-gray-900">Reporte Mensual Disponible</div>
+                    <div class="text-sm text-gray-600 mb-2">Se ha publicado el reporte estadístico de incidentes del mes</div>
+                    <span class="text-xs text-blue-600">Hace 3 días</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav fixed bottom-0 left-0 right-0 px-4 py-2">
+        <div class="flex justify-around items-center">
+            <div class="nav-item active flex flex-col items-center py-2">
+                <span class="text-2xl mb-1">🏠</span>
+                <span class="text-xs">Dashboard</span>
+            </div>
+            <div class="nav-item flex flex-col items-center py-2" onclick="newReport()">
+                <span class="text-2xl mb-1">🚨</span>
+                <span class="text-xs">Denunciar</span>
+            </div>
+            <div class="nav-item flex flex-col items-center py-2" onclick="viewAllReports()">
+                <span class="text-2xl mb-1">📋</span>
+                <span class="text-xs">Reportes</span>
+            </div>
+            <div class="nav-item flex flex-col items-center py-2" onclick="showResources()">
+                <span class="text-2xl mb-1">📞</span>
+                <span class="text-xs">Ayuda</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Report Detail Modal -->
+    <div id="reportModal" class="modal">
+        <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-900">Detalle del Reporte</h3>
+                    <button onclick="closeModal('reportModal')" class="text-gray-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="reportDetailContent">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+                
+                <!-- Communication Section -->
+                <div class="mt-6 border-t pt-6">
+                    <h4 class="font-semibold text-gray-900 mb-4">Comunicación con el Equipo</h4>
+                    
+                    <div class="space-y-3 mb-4" id="messageThread">
+                        <!-- Messages will be populated here -->
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <input type="text" id="messageInput" class="flex-1 border border-gray-300 rounded-lg px-3 py-2" placeholder="Escribe un mensaje...">
+                        <button onclick="sendMessage()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold">
+                            Enviar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            animateCards();
+        });
+        
+        function loadUserData() {
+            const username = localStorage.getItem('sosuni_user') || 'Usuario';
+            document.getElementById('usernameDisplay').textContent = username;
+        }
+        
+        function animateCards() {
+            anime({
+                targets: '.dashboard-card, .report-card',
+                translateY: [50, 0],
+                opacity: [0, 1],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutCubic'
+            });
+        }
+        
+        function newReport() {
+            window.location.href = 'report.html';
+        }
+        
+        function viewAllReports() {
+            alert('📋 Función próximamente disponible. Aquí verás el historial completo de tus reportes.');
+        }
+        
+        function contactSupport() {
+            window.location.href = 'resources.html';
+        }
+        
+        function viewStatistics() {
+            alert('📊 Función próximamente disponible. Aquí verás estadísticas personalizadas de tus reportes.');
+        }
+        
+        function openReportDetail(reportId) {
+            const modal = document.getElementById('reportModal');
+            const content = document.getElementById('reportDetailContent');
+            const messageThread = document.getElementById('messageThread');
+            
+            // Mock report data
+            const reportData = {
+                'SOS-2025-001247': {
+                    id: 'SOS-2025-001247',
+                    type: 'Acoso Sexual',
+                    location: 'Campus Central - Biblioteca',
+                    date: 'Hace 2 horas',
+                    status: 'En Proceso',
+                    description: 'Incidente reportado en biblioteca central. La persona reportante indica que ha sido víctima de acoso sexual recurrente por parte de un estudiante masculino en el área de estudio del segundo piso.',
+                    evidence: ['foto1.jpg', 'foto2.jpg'],
+                    messages: [
+                        {
+                            sender: 'SOS-UNI Team',
+                            message: 'Hemos recibido tu reporte y estamos investigando. ¿Podrías proporcionar más detalles sobre el horario del incidente?',
+                            time: 'Hace 1 hora',
+                            own: false
+                        },
+                        {
+                            sender: 'Tú',
+                            message: 'Generalmente ocurre entre las 14:00 y 16:00 horas.',
+                            time: 'Hace 45 minutos',
+                            own: true
+                        },
+                        {
+                            sender: 'SOS-UNI Team',
+                            message: 'Gracias por la información. Hemos aumentado la vigilancia en el área y estamos revisando las cámaras de seguridad.',
+                            time: 'Hace 30 minutos',
+                            own: false
+                        }
+                    ]
+                }
+            };
+            
+            const report = reportData[reportId];
+            
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">ID: ${report.id}</span>
+                        <span class="status-badge status-in-progress">${report.status}</span>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-gray-900 mb-1">${report.type}</div>
+                        <div class="text-sm text-gray-600">${report.location} • ${report.date}</div>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-gray-900 mb-2">Descripción:</div>
+                        <p class="text-sm text-gray-700">${report.description}</p>
+                    </div>
+                    
+                    <div>
+                        <div class="font-semibold text-gray-900 mb-2">Evidencia:</div>
+                        <div class="space-y-2">
+                            ${report.evidence.map(file => `
+                                <div class="flex items-center bg-gray-50 rounded-lg p-2">
+                                    <span class="text-lg mr-2">📎</span>
+                                    <span class="text-sm text-gray-700">${file}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Populate messages
+            messageThread.innerHTML = report.messages.map(msg => `
+                <div class="message-bubble ${msg.own ? 'own' : 'other'}">
+                    <div class="text-sm mb-1">${msg.sender}</div>
+                    <div class="text-sm">${msg.message}</div>
+                    <div class="text-xs opacity-75 mt-1">${msg.time}</div>
+                </div>
+            `).join('');
+            
+            modal.classList.add('active');
+            
+            anime({
+                targets: modal.querySelector('.bg-white'),
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                duration: 300,
+                easing: 'easeOutCubic'
+            });
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Add message to thread
+                const messageThread = document.getElementById('messageThread');
+                const newMessage = document.createElement('div');
+                newMessage.className = 'message-bubble own';
+                newMessage.innerHTML = `
+                    <div class="text-sm mb-1">Tú</div>
+                    <div class="text-sm">${message}</div>
+                    <div class="text-xs opacity-75 mt-1">Ahora</div>
+                `;
+                messageThread.appendChild(newMessage);
+                
+                input.value = '';
+                
+                // Simulate response
+                setTimeout(() => {
+                    const response = document.createElement('div');
+                    response.className = 'message-bubble other';
+                    response.innerHTML = `
+                        <div class="text-sm mb-1">SOS-UNI Team</div>
+                        <div class="text-sm">Gracias por tu mensaje. Te responderemos pronto.</div>
+                        <div class="text-xs opacity-75 mt-1">Ahora</div>
+                    `;
+                    messageThread.appendChild(response);
+                }, 1000);
+            }
+        }
+        
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+        }
+        
+        function logout() {
+            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                localStorage.removeItem('sosuni_loggedin');
+                localStorage.removeItem('sosuni_user');
+                window.location.href = 'login.html';
+            }
+        }
+        
+        function goBack() {
+            window.location.href = 'index.php';
+        }
+        
+        function showResources() {
+            window.location.href = 'resources.html';
+        }
+        
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                const modals = ['reportModal'];
+                modals.forEach(modalId => {
+                    const modal = document.getElementById(modalId);
+                    if (modal.classList.contains('active')) {
+                        closeModal(modalId);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

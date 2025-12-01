@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denunciar Incidente - SOS-UNI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .step-content { display: none; }
+        .step-content.active { display: block; }
+        .incident-card.selected { background-color: #dbeafe; border-color: #3b82f6; }
+        .privacy-option.selected { background-color: #dbeafe; }
+        .step-indicator { background: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden; }
+        .step-progress { background: #3b82f6; height: 100%; transition: width 0.3s; }
+    </style>
+</head>
+<body class="bg-gray-50 pb-20">
+    <div class="bg-white shadow-sm px-4 py-4">
+        <div class="flex items-center justify-between">
+            <button id="headerBackBtn" onclick="goBack()" class="text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-900">Denunciar Incidente</h1>
+            <button onclick="cancelReport()" class="text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="mt-4">
+            <div class="flex justify-between text-xs text-gray-600 mb-2">
+                <span>Paso <span id="currentStep">1</span> de 6</span>
+                <span id="stepName">Tipo de incidente</span>
+            </div>
+            <div class="step-indicator">
+                <div class="step-progress" id="stepProgress" style="width: 16.67%;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Paso 1: Tipo de incidente -->
+    <div class="step-content active px-4 py-6" id="step1">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">¿Qué tipo de incidente deseas reportar?</h2>
+        <p class="text-gray-600 mb-6">Selecciona la categoría que mejor describa la situación</p>
+        
+        <div class="grid grid-cols-1 gap-3">
+            <div class="incident-card border rounded-lg p-4 cursor-pointer" data-type="harassment">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-red-600 text-xl">🚫</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Acoso Sexual</div>
+                        <div class="text-sm text-gray-600">Coqueteos, comentarios, mensajes no deseados</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident-card border rounded-lg p-4 cursor-pointer" data-type="violence">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-orange-600 text-xl">⚠️</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Violencia Física</div>
+                        <div class="text-sm text-gray-600">Agresiones físicas entre estudiantes</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident-card border rounded-lg p-4 cursor-pointer" data-type="discrimination">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-purple-600 text-xl">🤝</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Discriminación</div>
+                        <div class="text-sm text-gray-600">Racismo, xenofobia, homofobia</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident-card border rounded-lg p-4 cursor-pointer" data-type="drugs">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-yellow-600 text-xl">💊</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Consumo/Venta de Sustancias</div>
+                        <div class="text-sm text-gray-600">Drogas dentro del campus universitario</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident-card border rounded-lg p-4 cursor-pointer" data-type="weapons">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-red-600 text-xl">🔫</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Amenazas con Armas</div>
+                        <div class="text-sm text-gray-600">Presencia de armas u objetos peligrosos</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident-card border rounded-lg p-4 cursor-pointer" data-type="academic">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-blue-600 text-xl">📚</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Acoso Académico</div>
+                        <div class="text-sm text-gray-600">Abuso de poder por profesores/ayudantes</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident-card border rounded-lg p-4 cursor-pointer" data-type="suicide">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-pink-600 text-xl">💔</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Ideación Suicida</div>
+                        <div class="text-sm text-gray-600">Señales de suicidio o depresión severa</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident-card border rounded-lg p-4 cursor-pointer" data-type="extortion">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-gray-600 text-xl">💸</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Extorsión Digital</div>
+                        <div class="text-sm text-gray-600">Sextorsión, chantaje, divulgación de imágenes</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident-card border rounded-lg p-4 cursor-pointer" data-type="theft">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-indigo-600 text-xl">💰</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Robo o Hurto</div>
+                        <div class="text-sm text-gray-600">En instalaciones universitarias</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="incident-card border rounded-lg p-4 cursor-pointer" data-type="other">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-green-600 text-xl">⚡</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Otro</div>
+                        <div class="text-sm text-gray-600">Cualquier otra situación de riesgo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Paso 2: Descripción -->
+    <div class="step-content px-4 py-6" id="step2">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Describe el incidente</h2>
+        <p class="text-gray-600 mb-6">Proporciona los detalles relevantes (máximo 500 caracteres)</p>
+        
+        <div class="space-y-4">
+            <div>
+                <textarea id="incidentDescription" class="form-input w-full h-32 resize-none border p-3 rounded-lg" 
+                          placeholder="Describe lo que ocurrió, incluyendo fecha aproximada, personas involucradas, y cualquier detalle que consideres importante..."
+                          maxlength="500"></textarea>
+                <div class="text-right text-sm text-gray-500 mt-1">
+                    <span id="charCount">0</span>/500
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 rounded-xl p-4">
+                <div class="flex items-start">
+                    <span class="text-blue-600 mr-2">💡</span>
+                    <div class="text-sm text-blue-800">
+                        <strong>Consejo:</strong> Incluye información como lugar aproximado, fecha/hora, y cualquier característica relevante de la situación.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Paso 3: Evidencia -->
+    <div class="step-content px-4 py-6" id="step3">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Adjuntar evidencia (opcional)</h2>
+        <p class="text-gray-600 mb-6">Puedes añadir fotos, videos, PDF o documentos que respalden tu reporte</p>
+        
+        <div class="space-y-4">
+            <div class="evidence-upload border-2 border-dashed border-gray-300 rounded-lg p-6 text-center" id="evidenceUpload">
+                <div class="text-4xl mb-4">📎</div>
+                <div class="font-semibold text-gray-900 mb-2">Arrastra archivos aquí</div>
+                <div class="text-gray-600 mb-4">o</div>
+                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold" onclick="selectFiles()">
+                    Seleccionar archivos
+                </button>
+                <input type="file" id="fileInput" multiple accept="image/jpeg,image/png,image/heic,image/heif,image/webp,video/mp4,video/quicktime,video/3gpp,video/webm,.pdf,.doc,.docx" class="hidden">
+                <div class="text-xs text-gray-500 mt-4">
+                    Formatos permitidos: Imágenes, Videos, PDF, Word<br>
+                    Máximo 5 archivos, 10MB cada uno
+                </div>
+                <div id="fileErrors" class="hidden mt-3 p-3 bg-red-50 border border-red-200 text-sm text-red-700 rounded-lg"></div>
+            </div>
+            
+            <div id="evidencePreview" class="hidden">
+                <h3 class="font-semibold text-gray-900 mb-3">Archivos adjuntos:</h3>
+                <div id="fileList" class="space-y-2"></div>
+            </div>
+            
+            <div id="metadataStripped" class="hidden bg-green-50 rounded-xl p-4 border border-green-200">
+                <div class="flex items-start">
+                    <span class="text-green-600 mr-2 text-xl">✅</span>
+                    <div class="text-sm text-green-800">
+                        <strong>Los metadatos se eliminarán en el servidor</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-yellow-50 rounded-xl p-4">
+                <div class="flex items-start">
+                    <span class="text-yellow-600 mr-2">🔒</span>
+                    <div class="text-sm text-yellow-800">
+                        <strong>Seguridad:</strong> La universidad procesará los archivos de forma segura. Tu reporte es anónimo.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Paso 4: Ubicación -->
+    <div class="step-content px-4 py-6" id="step4">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">¿Dónde ocurrió?</h2>
+        <p class="text-gray-600 mb-6">Selecciona la ubicación aproximada del incidente</p>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Campus</label>
+                <select class="form-input w-full border p-3 rounded-lg" id="campusSelect">
+                    <option value="">Selecciona un campus</option>
+                    <option value="central">Campus Central</option>
+                    <option value="sur">Campus Sur</option>
+                    <option value="norte">Campus Norte</option>
+                    <option value="medicina">Campus Medicina</option>
+                    <option value="ingenieria">Campus Ingeniería</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Facultad/Edificio (opcional)</label>
+                <input type="text" class="form-input w-full border p-3 rounded-lg" id="buildingInput" placeholder="Ej: Facultad de Derecho, Biblioteca Central">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Área específica (opcional)</label>
+                <input type="text" class="form-input w-full border p-3 rounded-lg" id="areaInput" placeholder="Ej: Baños del primer piso, Cafetería">
+            </div>
+            
+            <div class="bg-blue-50 rounded-xl p-4">
+                <div class="flex items-start">
+                    <span class="text-blue-600 mr-2">🔍</span>
+                    <div class="text-sm text-blue-800">
+                        <strong>Importante:</strong> No necesitas proporcionar una ubicación exacta. Una aproximación es suficiente para que la universidad pueda tomar medidas preventivas.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Paso 5: Anonimato -->
+    <div class="step-content px-4 py-6" id="step5">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Nivel de anonimato</h2>
+        <p class="text-gray-600 mb-6">Elige cómo deseas que se maneje tu reporte</p>
+        
+        <div class="space-y-4">
+            <div class="privacy-option border rounded-lg p-4 cursor-pointer" data-privacy="pseudonym">
+                <div class="flex items-start">
+                    <div class="w-6 h-6 border-2 border-gray-300 rounded-full flex items-center justify-center mr-3 mt-1">
+                        <div class="w-2 h-2 bg-blue-600 rounded-full hidden"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Seudónimo (Recomendado)</div>
+                        <div class="text-sm text-gray-600 mt-1">
+                            Crea un seudónimo para hacer seguimiento de tu reporte sin revelar tu identidad.
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3 hidden" id="pseudonymInput">
+                    <input type="text" class="form-input w-full border p-3 rounded-lg" placeholder="Ingresa tu seudónimo">
+                </div>
+            </div>
+            
+            <div class="privacy-option border rounded-lg p-4 cursor-pointer selected" data-privacy="anonymous">
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mr-3 mt-1">
+                        <div class="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Totalmente anónimo</div>
+                        <div class="text-sm text-gray-600 mt-1">
+                            No se recopilará ningún dato que pueda identificarte. No podrás hacer seguimiento.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="privacy-option border rounded-lg p-4 cursor-pointer" data-privacy="contact">
+                <div class="flex items-start">
+                    <div class="w-6 h-6 border-2 border-gray-300 rounded-full flex items-center justify-center mr-3 mt-1">
+                        <div class="w-2 h-2 bg-blue-600 rounded-full hidden"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">Contacto seguro</div>
+                        <div class="text-sm text-gray-600 mt-1">
+                            Dejas un contacto para seguimiento. Tu información será tratada con máxima confidencialidad.
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3 hidden" id="contactInput">
+                    <input type="email" class="form-input w-full border p-3 rounded-lg" placeholder="Correo electrónico seguro">
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-green-50 rounded-xl p-4 mt-6">
+            <div class="flex items-start">
+                <span class="text-green-600 mr-2">🛡️</span>
+                <div class="text-sm text-green-800">
+                    <strong>Garantía de privacidad:</strong> Independientemente de tu elección, tu identidad estará protegida según las más estrictas normas de privacidad universitaria.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Paso 6: Revisión -->
+    <div class="step-content px-4 py-6" id="step6">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Revisar y enviar</h2>
+        <p class="text-gray-600 mb-6">Por favor, revisa la información antes de enviar tu reporte</p>
+        
+        <div class="bg-white rounded-xl p-4 space-y-4 mb-6">
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-gray-600">Tipo de incidente:</span>
+                <span class="font-semibold" id="reviewType">-</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-gray-600">Ubicación:</span>
+                <span class="font-semibold" id="reviewLocation">-</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-gray-600">Evidencia:</span>
+                <span class="font-semibold" id="reviewEvidence">0 archivos</span>
+            </div>
+            <div class="flex justify-between items-center py-2">
+                <span class="text-gray-600">Anonimato:</span>
+                <span class="font-semibold" id="reviewPrivacy">Totalmente anónimo</span>
+            </div>
+        </div>
+        
+        <div class="bg-gray-50 rounded-xl p-4 mb-6">
+            <h3 class="font-semibold text-gray-900 mb-2">Descripción:</h3>
+            <p class="text-gray-700 text-sm" id="reviewDescription">-</p>
+        </div>
+        
+        <div class="bg-yellow-50 rounded-xl p-4 mb-6">
+            <div class="flex items-start">
+                <span class="text-yellow-600 mr-2">⚠️</span>
+                <div class="text-sm text-yellow-800">
+                    <strong>Importante:</strong> Una vez enviado, el reporte no podrá ser modificado. Asegúrate de que toda la información sea correcta.
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="submitReport()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg">
+            🚨 ENVIAR REPORTE ANÓNIMO
+        </button>
+    </div>
+    
+    <!-- Navegación -->
+    <div class="fixed bottom-20 left-0 right-0 px-4 py-4">
+        <div class="flex justify-between">
+            <button id="nextBtn" onclick="nextStep()" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold ml-auto relative overflow-hidden" disabled>
+                <span>Siguiente</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav fixed bottom-0 left-0 right-0 px-4 py-2 bg-white border-t">
+        <div class="flex justify-around items-center">
+            <div class="flex flex-col items-center py-2 cursor-pointer" onclick="goHome()">
+                <span class="text-2xl mb-1">🏠</span>
+                <span class="text-xs">Inicio</span>
+            </div>
+            <div class="flex flex-col items-center py-2 cursor-pointer" onclick="showResources()">
+                <span class="text-2xl mb-1">📞</span>
+                <span class="text-xs">Recursos</span>
+            </div>
+            <div class="flex flex-col items-center py-2 cursor-pointer" onclick="showSettings()">
+                <span class="text-2xl mb-1">⚙️</span>
+                <span class="text-xs">Configuración</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Éxito -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md text-center">
+            <div class="text-6xl mb-4">✅</div>
+            <h3 class="text-xl font-bold mb-2 text-gray-900">¡Reporte enviado!</h3>
+            <p class="text-gray-600 mb-6">Tu denuncia ha sido recibida de forma anónima y segura. El equipo de SOS-UNI la revisará en las próximas 24 horas.</p>
+            <div class="bg-blue-50 rounded-xl p-4 mb-6">
+                <div class="text-sm text-blue-800">
+                    <strong>Código de seguimiento:</strong> <span id="trackingCode" class="font-mono"></span>
+                </div>
+            </div>
+            <button onclick="window.location.href='index.html'" class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold">
+                Volver al inicio
+            </button>
+        </div>
+    </div>
+    
+    <script src="js/report.js"></script>
+</body>
+</html>

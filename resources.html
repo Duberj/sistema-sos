@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursos de Ayuda - SOS-UNI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #1e3a8a;
+            --color-secondary: #3b82f6;
+            --color-danger: #dc2626;
+            --color-success: #059669;
+            --color-warning: #f59e0b;
+            --color-neutral: #6b7280;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        .resource-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .resource-card:hover {
+            border-color: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+        }
+        
+        .emergency-card {
+            background: linear-gradient(135deg, var(--color-danger) 0%, #ef4444 100%);
+            color: white;
+            border: none;
+        }
+        
+        .emergency-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+        }
+        
+        .contact-button {
+            background: var(--color-primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-button:hover {
+            background: var(--color-secondary);
+            transform: translateY(-1px);
+        }
+        
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        
+        .nav-item {
+            transition: all 0.3s ease;
+            color: var(--color-neutral);
+        }
+        
+        .nav-item.active {
+            color: var(--color-primary);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+        }
+        
+        .faq-question {
+            cursor: pointer;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+        
+        .faq-answer {
+            margin-top: 12px;
+            color: var(--color-neutral);
+            display: none;
+        }
+        
+        .faq-answer.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 pb-20">
+    <!-- Header -->
+    <div class="bg-white shadow-sm px-4 py-4">
+        <div class="flex items-center justify-between">
+            <h1 class="text-xl font-bold text-gray-900">Recursos de Ayuda</h1>
+            <button onclick="goHome()" class="text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Emergency Contacts -->
+    <div class="px-4 py-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Emergencias Inmediatas</h2>
+        
+        <div class="resource-card emergency-card" onclick="callEmergency('911')">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <span class="text-3xl mr-4">🚨</span>
+                    <div>
+                        <div class="font-bold text-lg">Emergencias Policiales</div>
+                        <div class="text-sm opacity-90">Para situaciones de peligro inmediato</div>
+                    </div>
+                </div>
+                <div class="text-2xl font-bold">911</div>
+            </div>
+        </div>
+        
+          
+        <div class="resource-card emergency-card" onclick="callEmergency('105')">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <span class="text-3xl mr-4">🏥</span>
+                    <div>
+                        <div class="font-bold text-lg">Emergencias Médicas</div>
+                        <div class="text-sm opacity-90">Atención médica inmediata</div>
+                    </div>
+                </div>
+                <div class="text-2xl font-bold">105</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Psychological Support -->
+    <div class="px-4">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Apoyo Psicológico</h2>
+        
+        <div class="resource-card" onclick="showResourceDetail('psychology')">
+            <div class="flex items-center">
+                <span class="text-3xl mr-4">🧠</span>
+                <div class="flex-1">
+                    <div class="font-semibold text-gray-900">Servicio de Psicología</div>
+                    <div class="text-sm text-gray-600 mb-3">Atención profesional y confidencial</div>
+                    <div class="text-sm text-blue-600 font-medium">Horario: L-V 8:00-18:00</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+        
+        <div class="resource-card" onclick="showResourceDetail('crisis')">
+            <div class="flex items-center">
+                <span class="text-3xl mr-4">💔</span>
+                <div class="flex-1">
+                    <div class="font-semibold text-gray-900">Línea de Crisis</div>
+                    <div class="text-sm text-gray-600 mb-3">Atención 24/7 para situaciones urgentes</div>
+                    <div class="text-sm text-red-600 font-medium">Disponible 24 horas</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+        
+        <div class="resource-card" onclick="showResourceDetail('support')">
+            <div class="flex items-center">
+                <span class="text-3xl mr-4">🤝</span>
+                <div class="flex-1">
+                    <div class="font-semibold text-gray-900">Grupos de Apoyo</div>
+                    <div class="text-sm text-gray-600 mb-3">Acompañamiento entre pares</div>
+                    <div class="text-sm text-green-600 font-medium">Sesiones semanales</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Legal and Academic Support -->
+    <div class="px-4 mt-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Apoyo Legal</h2>
+        
+        <div class="resource-card" onclick="showResourceDetail('legal')">
+            <div class="flex items-center">
+                <span class="text-3xl mr-4">⚖️</span>
+                <div class="flex-1">
+                    <div class="font-semibold text-gray-900">Asesoría Legal</div>
+                    <div class="text-sm text-gray-600 mb-3">Orientación sobre tus derechos y opciones</div>
+                    <div class="text-sm text-blue-600 font-medium">Citas previa reserva</div>
+                </div>
+                <div class="text-gray-400">›</div>
+            </div>
+        </div>
+        
+       
+    </div>
+    
+    <!-- FAQ Section -->
+    <div class="px-4 mt-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Preguntas Frecuentes</h2>
+        
+        <div class="bg-white rounded-xl p-4">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>¿Mis reportes son realmente anónimos?</span>
+                    <span class="text-xl">+</span>
+                </div>
+                <div class="faq-answer">
+                    Sí, absolutamente. SOS-UNI está diseñado para garantizar el anonimato completo. No recopilamos datos personales, no rastreamos ubicación exacta, y todos los metadatos se eliminan automáticamente.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>¿Qué pasa después de enviar un reporte?</span>
+                    <span class="text-xl">+</span>
+                </div>
+                <div class="faq-answer">
+                    El equipo de SOS-UNI revisa tu reporte en máximo 24 horas. Según la gravedad, se activan los protocolos correspondientes: desde intervenciones preventivas hasta acciones disciplinarias si corresponde.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>¿Puedo hacer seguimiento a mi reporte?</span>
+                    <span class="text-xl">+</span>
+                </div>
+                <div class="faq-answer">
+                    Si creaste un seudónimo o dejaste contacto seguro, podrás recibir actualizaciones. De lo contrario, por seguridad, no hay forma de hacer seguimiento para proteger tu anonimato.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>¿Qué hago si mi seguridad está en riesgo inmediato?</span>
+                    <span class="text-xl">+</span>
+                </div>
+                <div class="faq-answer">
+                    En situaciones de peligro inmediato, contacta al 911. SOS-UNI es complementario a los servicios de emergencia, no un reemplazo.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav fixed bottom-0 left-0 right-0 px-4 py-2">
+        <div class="flex justify-around items-center">
+            <div class="nav-item flex flex-col items-center py-2" onclick="goHome()">
+                <span class="text-2xl mb-1">🏠</span>
+                <span class="text-xs">Inicio</span>
+            </div>
+            <div class="nav-item active flex flex-col items-center py-2" onclick="showResources()">
+                <span class="text-2xl mb-1">📞</span>
+                <span class="text-xs">Recursos</span>
+            </div>
+            <div class="nav-item flex flex-col items-center py-2" onclick="showSettings()">
+                <span class="text-2xl mb-1">⚙️</span>
+                <span class="text-xs">Configuración</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Resource Detail Modal -->
+    <div id="resourceModal" class="modal">
+        <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-900" id="modalTitle">Detalle del Recurso</h3>
+                    <button onclick="closeModal('resourceModal')" class="text-gray-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="modalContent">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            animateCards();
+        });
+        
+        function animateCards() {
+            anime({
+                targets: '.resource-card',
+                translateY: [50, 0],
+                opacity: [0, 1],
+                duration: 600,
+                delay: anime.stagger(100),
+                easing: 'easeOutCubic'
+            });
+        }
+        
+        function callEmergency(number) {
+            if (confirm(`¿Deseas llamar al ${number}?`)) {
+                // In a real app, this would initiate a call
+                alert(`Llamando al ${number}...`);
+            }
+        }
+        
+        function showResourceDetail(type) {
+            const modal = document.getElementById('resourceModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+            
+            const resources = {
+                psychology: {
+                    title: 'Servicio de Psicología',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="bg-blue-50 rounded-xl p-4">
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 mr-2">🏥</span>
+                                    <div>
+                                        <div class="font-semibold text-blue-900">Ubicación</div>
+                                        <div class="text-sm text-blue-800">xxxxxxxxxxxxxxxxxxxxxxxxxx</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-green-50 rounded-xl p-4">
+                                <div class="flex items-start">
+                                    <span class="text-green-600 mr-2">📞</span>
+                                    <div>
+                                        <div class="font-semibold text-green-900">Contacto</div>
+                                        <div class="text-sm text-green-800">Tel: xxxxxxxxxxxx</div>
+                                        <div class="text-sm text-green-800">Email: xxxxxxxxxxxxxxxxxxxx</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-purple-50 rounded-xl p-4">
+                                <div class="flex items-start">
+                                    <span class="text-purple-600 mr-2">⏰</span>
+                                    <div>
+                                        <div class="font-semibold text-purple-900">Horario</div>
+                                        <div class="text-sm text-purple-800">Lunes a Viernes: 8:00 - 18:00</div>
+                                        <div class="text-sm text-purple-800">Sábados: 9:00 - 14:00</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <div class="font-semibold text-gray-900 mb-2">Servicios Ofrecidos:</div>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• Atención psicológica individual</li>
+                                    <li>• Terapia de grupo</li>
+                                    <li>• Evaluaciones psicológicas</li>
+                                    <li>• Orientación vocacional</li>
+                                    <li>• Manejo de crisis</li>
+                                </ul>
+                            </div>
+                            
+                            <a href="tel:555-0123" class="contact-button w-full text-center block">
+                                📞 Llamar ahora
+                            </a>
+                        </div>
+                    `
+                },
+                crisis: {
+                    title: 'Línea de Crisis',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="bg-red-50 rounded-xl p-4">
+                                <div class="flex items-start">
+                                    <span class="text-red-600 mr-2">🚨</span>
+                                    <div>
+                                        <div class="font-semibold text-red-900">Emergencia 24/7</div>
+                                        <div class="text-sm text-red-800">Atención inmediata para crisis emocionales</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-blue-50 rounded-xl p-4">
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 mr-2">📞</span>
+                                    <div>
+                                        <div class="font-semibold text-blue-900">Línea Directa</div>
+                                        <div class="text-sm text-blue-800 font-bold text-lg">xxxxxxxxxxxxxxxxxxx</div>
+                                        <div class="text-sm text-blue-800">Atención inmediata las 24 horas</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <div class="font-semibold text-gray-900 mb-2">¿Cuándo contactar?</div>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• Pensamientos de autolesión</li>
+                                    <li>• Crisis emocional severa</li>
+                                    <li>• Ataques de pánico</li>
+                                    <li>• Ideación suicida</li>
+                                    <li>• Situaciones de abuso inmediato</li>
+                                </ul>
+                            </div>
+                            
+                            <a href="tel:xxxxxxxxxxxxxxxx" class="contact-button w-full text-center block">
+                                🚨 Llamada de emergencia
+                            </a>
+                        </div>
+                    `
+                },
+                support: {
+                    title: 'Grupos de Apoyo',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="bg-purple-50 rounded-xl p-4">
+                                <div class="flex items-start">
+                                    <span class="text-purple-600 mr-2">🤝</span>
+                                    <div>
+                                        <div class="font-semibold text-purple-900">Acompañamiento entre pares</div>
+                                        <div class="text-sm text-purple-800">Espacios seguros para compartir experiencias</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                                   
+                            <div class="bg-green-50 rounded-xl p-4">
+                                <div class="flex items-start">
+                                    <span class="text-green-600 mr-2">📅</span>
+                                    <div>
+                                        <div class="font-semibold text-green-900">Horarios</div>
+                                        <div class="text-sm text-green-800">Sesiones semanales, diferentes días</div>
+                                        <div class="text-sm text-green-800">Duración: 1.5 horas por sesión</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <div class="font-semibold text-gray-900 mb-2">Beneficios:</div>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• Reducción del aislamiento</li>
+                                    <li>• Apoyo emocional mutuo</li>
+                                    <li>• Intercambio de estrategias</li>
+                                    <li>• Desarrollo de redes de apoyo</li>
+                                    <li>• Ambiente no juzgante</li>
+                                </ul>
+                            </div>
+                            
+                            <button onclick="alert('Te hemos enviado la información de inscripción por email.')" class="contact-button w-full text-center block">
+                                📧 Inscribirme
+                            </button>
+                        </div>
+                    `
+                },
+                legal: {
+                    title: 'Asesoría Legal',
+                    content: `
+                        <div class="space-y-4">
+                            <div class="bg-blue-50 rounded-xl p-4">
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 mr-2">⚖️</span>
+                                    <div>
+                                        <div class="font-semibold text-blue-900">Orientación jurídica</div>
+                                        <div class="text-sm text-blue-800">Asesoría sobre derechos y opciones legales</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-green-50 rounded-xl p-4">
+                                <div class="flex items-start">
+                                    <span class="text-green-600 mr-2">📞</span>
+                                    <div>
+                                        <div class="font-semibold text-green-900">Contacto</div>
+                                        <div class="text-sm text-green-800">Tel: xxxxxxxxxxxxx</div>
+                                        <div class="text-sm text-green-800">Email: xxxxxxxxxxxxxxxxxxxxxxxxx</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-purple-50 rounded-xl p-4">
+                                <div class="font-semibold text-purple-900 mb-2">Servicios:</div>
+                                <ul class="text-sm text-purple-800 space-y-1">
+                                    <li>• Asesoría sobre denuncias penales</li>
+                                    <li>• Acompañamiento en procesos</li>
+                                    <li>• Información sobre órdenes de protección</li>
+                                    <li>• Orientación sobre derechos estudiantiles</li>
+                                    <li>• Derivación a abogados especializados</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <div class="font-semibold text-gray-900 mb-2">Áreas de Especialidad:</div>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• Violencia de género</li>
+                                    <li>• Discriminación y acoso</li>
+                                    <li>• Delitos informáticos</li>
+                                    <li>• Derecho educativo</li>
+                                    <li>• Procesos disciplinarios universitarios</li>
+                                </ul>
+                            </div>
+                            
+                            <a href="tel:555-0456" class="contact-button w-full text-center block">
+                                📞 Solicitar cita
+                            </a>
+                        </div>
+                    `
+                },
+            };
+            
+            const resource = resources[type];
+            title.textContent = resource.title;
+            content.innerHTML = resource.content;
+            
+            modal.classList.add('active');
+            
+            anime({
+                targets: modal.querySelector('.bg-white'),
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                duration: 300,
+                easing: 'easeOutCubic'
+            });
+        }
+        
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+        }
+        
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('span:last-child');
+            
+            if (answer.classList.contains('active')) {
+                answer.classList.remove('active');
+                icon.textContent = '+';
+            } else {
+                // Close all other FAQs
+                document.querySelectorAll('.faq-answer').forEach(a => {
+                    a.classList.remove('active');
+                });
+                document.querySelectorAll('.faq-question span:last-child').forEach(i => {
+                    i.textContent = '+';
+                });
+                
+                answer.classList.add('active');
+                icon.textContent = '−';
+            }
+        }
+        
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+        
+        function showResources() {
+            // Already on resources page
+            window.location.reload();
+        }
+        
+        function showSettings() {
+            window.location.href = 'settings.html';
+        }
+    </script>
+</body>
+</html>
